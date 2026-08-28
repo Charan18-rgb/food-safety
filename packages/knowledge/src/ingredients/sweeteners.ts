@@ -1,0 +1,121 @@
+import { IngredientKnowledge } from '../types.js';
+
+export const SWEETENER_INGREDIENTS: IngredientKnowledge[] = [
+  {
+    id: 'sugar',
+    canonicalName: 'Refined Sugar (Sucrose)',
+    aliases: ['sugar', 'cane sugar', 'white sugar', 'refined sugar', 'sucrose', 'table sugar', 'crystal sugar', 'cheeni'],
+    category: 'refined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: true,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Purified, crystallized sucrose extracted from sugarcane; high caloric density with no micronutrients or fiber.',
+    sourceRefs: ['FSSAI Standards 2.8.1', 'WHO Free Sugars Guideline']
+  },
+  {
+    id: 'jaggery',
+    canonicalName: 'Jaggery (Gur)',
+    aliases: ['jaggery', 'gur', 'gud', 'unrefined cane sugar', 'jaggery powder', 'palm jaggery', 'nattu sakkarai', 'bella', 'vellam'],
+    category: 'unrefined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Traditional unrefined, non-centrifugal Indian cane or palm sweetener retaining natural molasses, minerals, and iron traces.',
+    sourceRefs: ['FSSAI Standards 2.8.4', 'ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'honey',
+    canonicalName: 'Honey',
+    aliases: ['honey', 'pure honey', 'raw honey', 'madhu', 'shehad'],
+    category: 'unrefined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Natural sweet fluid produced by honeybees from floral nectar, consisting mainly of fructose and glucose.',
+    sourceRefs: ['FSSAI Standards 2.8.2']
+  },
+  {
+    id: 'liquid_glucose',
+    canonicalName: 'Liquid Glucose (Glucose Syrup)',
+    aliases: ['liquid glucose', 'glucose syrup', 'corn syrup', 'confectioners glucose', 'glucose-fructose syrup'],
+    category: 'refined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: true,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Viscous concentrated aqueous solution of nutritive saccharides obtained by starch hydrolysis; ultra-processing indicator.',
+    sourceRefs: ['FSSAI Standards 2.8.5']
+  },
+  {
+    id: 'invert_sugar_syrup',
+    canonicalName: 'Invert Sugar Syrup',
+    aliases: ['invert sugar', 'invert sugar syrup', 'invert syrup', 'inverted sugar syrup', 'inverted sugar'],
+    category: 'refined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: true,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Equimolar mixture of glucose and fructose produced by hydrolyzing sucrose; widely used in biscuits for moisture retention.',
+    sourceRefs: ['FSSAI Standards']
+  },
+  {
+    id: 'maltodextrin',
+    canonicalName: 'Maltodextrin',
+    aliases: ['maltodextrin', 'corn maltodextrin', 'tapioca maltodextrin', 'wheat maltodextrin'],
+    category: 'refined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: true,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Industrial hydrolyzed starch carbohydrate polymer with high glycemic index (~110-185); ultra-processing marker.',
+    sourceRefs: ['JECFA Additive Specifications']
+  },
+  {
+    id: 'dextrose',
+    canonicalName: 'Dextrose (D-Glucose)',
+    aliases: ['dextrose', 'dextrose monohydrate', 'd-glucose', 'dextrose anhydrous'],
+    category: 'refined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: true,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Purified and crystallized D-glucose obtained from starch hydrolysis.',
+    sourceRefs: ['FSSAI Standards 2.8.3']
+  },
+  {
+    id: 'fructose',
+    canonicalName: 'Fructose / High Fructose Corn Syrup',
+    aliases: ['fructose', 'high fructose corn syrup', 'hfcs', 'crystalline fructose', 'fruit sugar'],
+    category: 'refined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: true,
+    isPositiveMarker: false,
+    allergenType: 'none',
+    description: 'Concentrated simple monosaccharide syrup associated with high hepatic lipogenesis when consumed in excess.',
+    sourceRefs: ['WHO Guidance on Free Sugars']
+  },
+  {
+    id: 'malt_extract',
+    canonicalName: 'Malt Extract (Barley Malt)',
+    aliases: ['malt extract', 'barley malt extract', 'malted barley', 'malted barley extract', 'malt extract solids'],
+    category: 'unrefined_sweetener',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: false,
+    allergenType: 'gluten',
+    description: 'Viscous concentrated extract of sprouted, malted barley grains containing maltose and complex flavor compounds.',
+    sourceRefs: ['FSSAI Standards']
+  }
+];

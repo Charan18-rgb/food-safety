@@ -1,0 +1,121 @@
+import { IngredientKnowledge } from '../types.js';
+
+export const NUT_SEED_INGREDIENTS: IngredientKnowledge[] = [
+  {
+    id: 'almonds',
+    canonicalName: 'Almonds (Badam)',
+    aliases: ['almonds', 'badam', 'almond flour', 'roasted almonds', 'sliced almonds'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'nuts',
+    description: 'Nutrient-rich tree nut high in monounsaturated fats, Vitamin E, magnesium, and dietary fiber.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'cashews',
+    canonicalName: 'Cashews (Kaju)',
+    aliases: ['cashews', 'kaju', 'cashew nuts', 'cashew pieces', 'split cashews'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'nuts',
+    description: 'Popular creamy Indian tree nut rich in copper, magnesium, and heart-healthy oleic acid.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'peanuts',
+    canonicalName: 'Peanuts (Moongfali)',
+    aliases: ['peanuts', 'moongfali', 'groundnuts', 'roasted peanuts', 'peanut butter', 'roasted groundnuts'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'peanuts',
+    description: 'Nutrient-dense legume/oilseed offering high plant protein, healthy fats, and resveratrol.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'walnuts',
+    canonicalName: 'Walnuts (Akhrot)',
+    aliases: ['walnuts', 'akhrot', 'walnut kernels'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'nuts',
+    description: 'Tree nut uniquely rich in plant-based Omega-3 alpha-linolenic acid (ALA) and polyphenols.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'pistachios',
+    canonicalName: 'Pistachios (Pista)',
+    aliases: ['pistachios', 'pista', 'roasted pistachios'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'nuts',
+    description: 'Low-calorie nutrient-dense nut high in lutein, zeaxanthin, potassium, and protein.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'fox_nuts',
+    canonicalName: 'Fox Nuts (Makhana)',
+    aliases: ['makhana', 'fox nuts', 'phool makhana', 'lotus seeds', 'gorgon nuts', 'puffed lotus seeds'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'none',
+    description: 'Traditional puffed aquatic seed snack naturally low in sodium, cholesterol, and fat, with good protein and minerals.',
+    sourceRefs: ['ICMR-NIN IFCT 2017', 'FSSAI Snack Standards']
+  },
+  {
+    id: 'chia_seeds',
+    canonicalName: 'Chia Seeds',
+    aliases: ['chia seeds', 'whole chia seeds', 'chia'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'none',
+    description: 'Hydrophilic whole seeds exceptionally high in soluble fiber and Omega-3 fatty acids.',
+    sourceRefs: ['USDA FoodData Central']
+  },
+  {
+    id: 'flax_seeds',
+    canonicalName: 'Flax Seeds (Alsi)',
+    aliases: ['flax seeds', 'alsi', 'linseeds', 'roasted flax seeds', 'ground flax'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'none',
+    description: 'Ancient oilseed loaded with lignan antioxidants, soluble fiber, and ALA Omega-3 fats.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  },
+  {
+    id: 'sesame_seeds',
+    canonicalName: 'Sesame Seeds (Til)',
+    aliases: ['sesame seeds', 'til', 'white sesame seeds', 'black sesame seeds', 'til ke beej'],
+    category: 'nut_seed',
+    isWholeGrain: false,
+    isRefinedGrain: false,
+    isUltraProcessedMarker: false,
+    isPositiveMarker: true,
+    allergenType: 'sesame',
+    description: 'Mineral-rich oilseed containing exceptional calcium (~1000mg/100g in unhulled form), copper, and healthy fats.',
+    sourceRefs: ['ICMR-NIN IFCT 2017']
+  }
+];
