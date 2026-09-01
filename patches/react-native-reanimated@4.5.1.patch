@@ -1,0 +1,27 @@
+diff --git a/android/CMakeLists.txt b/android/CMakeLists.txt
+index 2e22d0d17d6b91d628c90969bda4d6fa0bdb04d9..75fa6a91ec12d06797be3ff06b1b8dec0fcaad34 100644
+--- a/android/CMakeLists.txt
++++ b/android/CMakeLists.txt	
+@@ -32,16 +32,16 @@ endif()
+ 
+ set(BUILD_DIR "${CMAKE_SOURCE_DIR}/build")
+ set(ANDROID_CPP_DIR "${CMAKE_SOURCE_DIR}/src/main/cpp")
+-set(COMMON_CPP_DIR "${CMAKE_SOURCE_DIR}/../Common/cpp")
+-set(NATIVEVIEW_DIR "${CMAKE_SOURCE_DIR}/../Common/NativeView")
+-set(PACKAGE_ROOT_DIR "${CMAKE_SOURCE_DIR}/..")
++get_filename_component(COMMON_CPP_DIR "${CMAKE_SOURCE_DIR}/../Common/cpp" ABSOLUTE)
++get_filename_component(NATIVEVIEW_DIR "${CMAKE_SOURCE_DIR}/../Common/NativeView" ABSOLUTE)
++get_filename_component(PACKAGE_ROOT_DIR "${CMAKE_SOURCE_DIR}/.." ABSOLUTE)
+ set(CODEGEN_OUTPUT_DIR "${BUILD_DIR}/generated/source/codegen/jni")
+ 
+-file(GLOB_RECURSE REANIMATED_COMMON_CPP_SOURCES CONFIGURE_DEPENDS
++file(GLOB_RECURSE REANIMATED_COMMON_CPP_SOURCES 
+      "${COMMON_CPP_DIR}/reanimated/*.cpp")
+-file(GLOB_RECURSE REANIMATED_ANDROID_CPP_SOURCES CONFIGURE_DEPENDS
++file(GLOB_RECURSE REANIMATED_ANDROID_CPP_SOURCES 
+      "${ANDROID_CPP_DIR}/reanimated/*.cpp")
+-file(GLOB_RECURSE REANIMATED_NATIVEVIEW_CPP_SOURCES CONFIGURE_DEPENDS
++file(GLOB_RECURSE REANIMATED_NATIVEVIEW_CPP_SOURCES 
+      "${NATIVEVIEW_DIR}/react/renderer/components/rnreanimated/*.cpp")
+ 
+ find_package(fbjni REQUIRED CONFIG)
