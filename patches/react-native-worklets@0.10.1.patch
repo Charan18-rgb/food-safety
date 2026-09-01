@@ -1,0 +1,13 @@
+diff --git a/android/fix-prefab.gradle.kts b/android/fix-prefab.gradle.kts
+index 6f0a23a1f8f48f3aa2b629ac0013e2bd4a6afacb..291a194b49e3ed009e771d24d64d8097001bc604 100644
+--- a/android/fix-prefab.gradle.kts
++++ b/android/fix-prefab.gradle.kts	
+@@ -48,7 +48,7 @@ afterEvaluate {
+             abis.forEach { abi ->
+                 randomDirs?.forEach { randomDir ->
+                     val prefabFile = File(randomDir, "$abi/prefab_config.json")
+-                    if (prefabFile.exists()) prefabFile.setLastModified(System.currentTimeMillis())
++                    if (prefabFile.exists()) { /* prefabFile.setLastModified() disabled to prevent Windows CMake/Ninja 100-retry loop */ }
+                 }
+             }
+         }
