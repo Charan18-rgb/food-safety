@@ -1,4 +1,4 @@
-﻿import { ProductInput, AnalysisResult } from '@foodgrade/shared-types';
+import { ProductInput, AnalysisResult } from '@foodgrade/shared-types';
 import { evaluateProduct } from '@foodgrade/engine';
 import { ScanHistoryRecord, ScanHistoryFilter, ImportResult, OpenFoodFactsConfig } from './types.js';
 import { IScanHistoryRepository, ScanHistoryRepository } from './storage/ScanHistoryRepository.js';
@@ -26,18 +26,42 @@ export class FoodGradeClientService {
   /**
    * Looks up product by barcode on Open Food Facts, analyzes it via FoodGrade Engine,
    * saves it to scan history, and returns the combined result.
+   * @param signal - optional AbortSignal. When aborted, throws with name 'AbortError'.
+   *   Critically: history is NOT saved if the signal was aborted before the save step.
    */
-  async lookupBarcodeAndAnalyze(barcode: string): Promise<{
+  async lookupBarcodeAndAnalyze(barcode: string, signal?: AbortSignal): Promise<{
     productInput: ProductInput;
     analysisResult: AnalysisResult;
     scanRecord: ScanHistoryRecord;
   } | null> {
-    const productInput = await this.offClient.lookupByBarcode(barcode);
-    if (!productInput) {
-      return null;
+    if (signal?.aborted) {
+      const err = new Error('Cancelled'); err.name = 'AbortError'; throw err;
     }
 
+    const result = await this.offClient.lookupBarcodeDetailed(barcode, signal);
+    if (!result.success) {
+      if (result.error.name === 'AbortError') {
+        const err = new Error('Cancelled'); err.name = 'AbortError'; throw err;
+      }
+      if (result.error.name === 'ProductNotFoundError') {
+        return null; // Keep returning null for not found
+      }
+      throw result.error; // Throw network or rate limit errors
+    }
+
+    // Guard: do not score or save if cancelled between network response and save
+    if (signal?.aborted) {
+      const err = new Error('Cancelled'); err.name = 'AbortError'; throw err;
+    }
+
+    const productInput = result.product;
     const analysisResult = evaluateProduct(productInput);
+
+    // Final guard before the history write — this is the critical side-effect protection
+    if (signal?.aborted) {
+      const err = new Error('Cancelled'); err.name = 'AbortError'; throw err;
+    }
+
     const scanRecord = await this.saveScan(productInput, analysisResult);
 
     return {

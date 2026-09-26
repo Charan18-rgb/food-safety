@@ -1,0 +1,9 @@
+source_name,source_type,url,record_count,barcode_coverage,food_coverage,ingredient_coverage,nutrition_coverage,additive_coverage,india_coverage,license,redistribution_allowed,api_or_download,source_lineage,usable_for_catalog,usable_for_analysis,notes
+Open Food Facts,Crowdsourced/Label,https://world.openfoodfacts.org,4500000,high,high,medium,medium,medium,low,ODbL,yes,download,primary,yes,yes,Primary dataset for global food data
+USDA FoodData Central Branded Foods,Government/Branded,https://fdc.nal.usda.gov,2000000,high,high,high,high,low,low,Public Domain,yes,download,primary,yes,yes,Secondary enrichment for nutrition and ingredients
+Universe-HTT Barcode Reference,Identity,https://github.com/papyrussolution/UhttBarcodeReference,1500000,high,medium,none,none,none,unknown,MIT,yes,download,primary,yes,no,Identity only
+Universal Product Code Database (UPCitemdb),Identity/Commercial,https://www.upcitemdb.com,unknown,high,medium,none,none,none,unknown,Proprietary/Commercial,no,api,primary,no,no,API access only without explicit bulk redistribution rights; rejected for dataset build
+Keetly Packaged Food Benchmark,Benchmark,https://keetly.com,200,high,high,high,high,high,unknown,CC0/ODbL,yes,download,primary,no,no,Schema benchmark only; too small for bulk inclusion
+Indian Packaged Foods Dataset (2026),Research/Label,unknown,852,unknown,high,high,high,high,high,CC BY 4.0,yes,download,primary,yes,yes,Crucial Indian enrichment dataset
+FoodSwitch India,Proprietary/App,https://www.foodswitch.com,unknown,high,high,high,high,unknown,high,Proprietary,no,api,primary,no,no,Requires login/auth; rejected
+GS1 India DataKart,Proprietary/Official,https://www.gs1india.org,unknown,high,high,unknown,unknown,unknown,high,Proprietary,no,api,primary,no,no,Requires login/auth; rejected

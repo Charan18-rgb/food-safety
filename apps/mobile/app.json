@@ -5,7 +5,7 @@
                  "version":  "1.0.0",
                  "orientation":  "portrait",
                  "icon":  "./assets/images/icon.png",
-                 "scheme":  "mobile",
+                 "scheme":  "foodgrade",
                  "userInterfaceStyle":  "automatic",
                  "ios":  {
                              "icon":  "./assets/expo.icon"
@@ -23,6 +23,13 @@
                                          "image":  "./assets/images/splash-icon.png",
                                          "imageWidth":  76
                                      }
+                                 ],
+                                 "expo-sqlite",
+                                 [
+                                     "expo-camera",
+                                     {
+                                         "cameraPermission":  "Allow FoodGrade to access your camera to scan barcodes and photograph food labels for ingredient analysis."
+                                     }
                                  ]
                              ],
                  "experiments":  {
@@ -30,7 +37,8 @@
                                      "reactCompiler":  true
                                  },
                  "android":  {
-                                 "package":  "in.foodgrade.app"
+                                 "package":  "in.foodgrade.app",
+                                 "versionCode":  1
                              }
              }
 }

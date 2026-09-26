@@ -1,0 +1,9 @@
+SOURCE NAME,INDEPENDENT OR DERIVED,LICENSE,ACCESS TYPE,RECORD COUNT,BARCODE COVERAGE,INGREDIENT COVERAGE,NUTRITION COVERAGE,ADDITIVE COVERAGE,INDIA COVERAGE,FIELDS CONTRIBUTED,ACTUALLY INTEGRATED,REASON
+Open Food Facts,Independent,ODbL,Bulk Download,~4.5M,High,Medium,Medium,Medium,Medium,"barcode, brand, product_name, category, ingredients, nutrition, additives, country",YES,Primary bulk dataset with open redistribution rights.
+Universe-HTT Barcode Reference,Independent,MIT,Bulk Download,~1.5M,High,None,None,None,Medium,"brand, category",YES,Used for secondary field-level enrichment of category and brand identity.
+USDA FoodData Central Branded Foods,Independent,Public Domain,Bulk Download,~2M,High,High,High,Low,Low,"nutrition, ingredients",YES,Field-level enrichment for ingredients and exact nutrition.
+Indian Packaged Foods Nutritional Composition Dataset,Independent,CC BY 4.0,Bulk Download,852,Medium,High,High,High,High,"nutrition, category, ingredients",NO,Staged for next sprint integration.
+Universal Product Code Database (UPCitemdb),Independent,Proprietary,API,Unknown,High,None,None,None,Medium,None,NO,REJECTED — ACCESS/LICENSE (No bulk export rights).
+FoodSwitch India,Independent,Proprietary,API/App,Unknown,High,High,High,Unknown,High,None,NO,REJECTED — ACCESS/LICENSE (Requires Auth/Proprietary).
+GS1 India DataKart,Independent,Proprietary,API,Unknown,High,Unknown,Unknown,Unknown,High,None,NO,REJECTED — ACCESS/LICENSE (Requires Auth/Proprietary).
+Keetly packaged-food benchmark,Independent,CC0/ODbL,Dataset,200,High,High,High,High,Unknown,None,NO,Staged. Schema benchmark only.

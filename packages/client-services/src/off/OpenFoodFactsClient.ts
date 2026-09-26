@@ -1,4 +1,4 @@
-﻿import { ProductInput } from '@foodgrade/shared-types';
+import { ProductInput } from '@foodgrade/shared-types';
 import { IOpenFoodFactsClient } from './IOpenFoodFactsClient.js';
 import { adaptOpenFoodFactsV3Response } from './OpenFoodFactsAdapter.js';
 import { OFFV3ProductResponse, OFF_V3_REQUESTED_FIELDS } from './types.js';
@@ -28,6 +28,7 @@ export interface OFFClientOptions extends OpenFoodFactsConfig {
   maxRetries?: number;
   initialBackoffMs?: number;
   allowStaleFallbackOnNetworkError?: boolean;
+  proxyUrl?: string;
 }
 
 /**
@@ -46,6 +47,7 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
   private initialBackoffMs: number;
   private allowStaleFallback: boolean;
   private cache: OfflineProductCache | null;
+  private proxyUrl?: string;
 
   constructor(options: OFFClientOptions = {}, cache?: OfflineProductCache) {
     this.baseUrl = (options.baseUrl || DEFAULT_OFF_BASE_URL).replace(/\/+$/, '');
@@ -54,20 +56,54 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
     this.maxRetries = options.maxRetries !== undefined ? options.maxRetries : DEFAULT_OFF_MAX_RETRIES;
     this.initialBackoffMs = options.initialBackoffMs !== undefined ? options.initialBackoffMs : DEFAULT_OFF_INITIAL_BACKOFF_MS;
     this.allowStaleFallback = options.allowStaleFallbackOnNetworkError !== false;
+    this.proxyUrl = options.proxyUrl?.replace(/\/+$/, '');
     this.cache = cache !== undefined ? cache : new OfflineProductCache();
   }
 
   /**
    * Performs controlled fetch with exponential backoff on transient errors.
+   * @param callerSignal - optional AbortSignal from the caller (user cancellation).
+   *   Distinct from the per-attempt timeout controller created internally.
+   *   When callerSignal aborts, the error is immediately re-thrown as-is (AbortError)
+   *   without being reclassified as a timeout.
    */
-  private async fetchWithRetry(url: string): Promise<Response> {
+  private async fetchWithRetry(url: string, callerSignal?: AbortSignal): Promise<Response> {
+    // Fail fast before the first network attempt if already cancelled
+    if (callerSignal?.aborted) {
+      throw new DOMException('Cancelled before fetch', 'AbortError');
+    }
+
     let attempt = 0;
     let delay = this.initialBackoffMs;
 
     while (true) {
+      // Check caller signal before each retry attempt
+      if (callerSignal?.aborted) {
+        throw new DOMException('Cancelled during retry', 'AbortError');
+      }
+
       attempt++;
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+
+      // Merge: timeout controller + optional caller signal using AbortSignal.any() when available,
+      // otherwise fall back to manual forwarding.
+      const timeoutController = new AbortController();
+      const timer = setTimeout(() => timeoutController.abort(), this.timeoutMs);
+
+      let mergedSignal: AbortSignal;
+      if (callerSignal) {
+        // Abort the timeout controller if the caller cancels, so fetch unblocks immediately
+        const forwardCancel = () => timeoutController.abort();
+        callerSignal.addEventListener('abort', forwardCancel, { once: true });
+        mergedSignal = timeoutController.signal;
+        // Clean up listener on timer expiry
+        const originalAbort = timeoutController.abort.bind(timeoutController);
+        timeoutController.abort = () => {
+          callerSignal.removeEventListener('abort', forwardCancel);
+          originalAbort();
+        };
+      } else {
+        mergedSignal = timeoutController.signal;
+      }
 
       try {
         const response = await fetch(url, {
@@ -76,7 +112,7 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
             'User-Agent': this.userAgent,
             'Accept': 'application/json'
           },
-          signal: controller.signal
+          signal: mergedSignal
         });
 
         clearTimeout(timer);
@@ -106,6 +142,12 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
           throw err;
         }
 
+        // If the CALLER cancelled, propagate the AbortError immediately — do not retry,
+        // do not reclassify as NetworkTimeoutError.
+        if (callerSignal?.aborted) {
+          throw new DOMException('Request cancelled by caller', 'AbortError');
+        }
+
         const isTimeout = (err as Error).name === 'AbortError';
 
         // Retry transient network/timeout errors up to maxRetries
@@ -125,8 +167,17 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
 
   /**
    * Detailed lookup providing execution status, source provenance, and typed errors.
+   * @param signal - optional AbortSignal for caller-driven cancellation.
    */
-  async lookupBarcodeDetailed(barcode: string): Promise<OFFLookupResult> {
+  async lookupBarcodeDetailed(barcode: string, signal?: AbortSignal): Promise<OFFLookupResult> {
+    if (signal?.aborted) {
+      return {
+        success: false,
+        error: new FoodGradeError('Cancelled', 'AbortError'),
+        barcode
+      };
+    }
+
     let cleanBarcode: string;
     try {
       cleanBarcode = normalizeBarcode(barcode);
@@ -143,6 +194,16 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
     // 1. Check local cache
     if (this.cache) {
       const cacheRes = await this.cache.getWithStatus(cleanBarcode);
+      
+      // Check negative cache
+      if (cacheRes.status === 'fresh' && cacheRes.data === null) {
+        return {
+          success: false,
+          error: new ProductNotFoundError(cleanBarcode),
+          barcode: cleanBarcode
+        };
+      }
+      
       if (cacheRes.status === 'fresh' && cacheRes.data) {
         return {
           success: true,
@@ -159,9 +220,29 @@ export class OpenFoodFactsClient implements IOpenFoodFactsClient {
     const url = `${this.baseUrl}/api/v3/product/${encodeURIComponent(cleanBarcode)}.json?fields=${encodeURIComponent(OFF_V3_REQUESTED_FIELDS)}`;
 
     try {
-      const response = await this.fetchWithRetry(url);
+      const response = await this.fetchWithRetry(url, signal);
 
       if (response.status === 404) {
+        if (this.proxyUrl) {
+          try {
+            const proxyRes = await this.fetchWithRetry(`${this.proxyUrl}/${cleanBarcode}`, signal);
+            if (proxyRes.ok) {
+              const proxyJson = await proxyRes.json();
+              if (proxyJson.success && proxyJson.product) {
+                if (this.cache) await this.cache.set(cleanBarcode, proxyJson.product);
+                return { success: true, product: proxyJson.product, source: 'network' };
+              }
+            }
+          } catch (e) {
+            // Ignore proxy errors and just fall through to ProductNotFoundError
+          }
+        }
+        
+        if (this.cache) {
+          // Negative cache for 2 hours
+          await this.cache.set(cleanBarcode, null, 2 * 60 * 60 * 1000);
+        }
+        
         return {
           success: false,
           error: new ProductNotFoundError(cleanBarcode),

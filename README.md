@@ -13,7 +13,7 @@ FoodGrade empowers consumers to make informed choices about packaged food in Ind
 - **Deterministic & Explainable**: No opaque black-box AI scores. The scoring engine is a pure, mathematical function with versioned parameters.
 - **Zero-Coupled Core**: The domain logic, knowledge base, and scoring algorithms are pure TypeScript packages with zero dependencies on React, browsers, or cloud infrastructure.
 - **Offline-First & Private**: The scoring engine and ingredient database are bundled locally. Scans and history are stored on-device by default.
-- **Hybrid OCR Pipeline**: Uses a secure backend proxy to query Google Gemini 3.7 Flash for powerful label reading, seamlessly falling back to local on-device WebAssembly Tesseract OCR when offline.
+- **Hybrid OCR Pipeline**: Uses a secure backend proxy to query Google Gemini 3.8 Flash for powerful label reading, 
 
 ---
 

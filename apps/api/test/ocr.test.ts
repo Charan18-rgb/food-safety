@@ -56,7 +56,7 @@ describe('OCR Proxy Endpoint', () => {
       expect(res.body.rawText).toBe('MOCK_OCR_TEXT');
       expect(res.body.provider).toBe('gemini_cloud_vision');
       expect(res.body.confidenceAvailable).toBe(false);
-      expect(res.body.metadata.model).toBe('gemini-3.7-flash');
+      expect(res.body.metadata.model).toBe('gemini-3.8-flash');
       expect(res.body.metadata.proxyResponse).toBe(true);
     });
 
@@ -85,7 +85,7 @@ describe('OCR Proxy Endpoint', () => {
 
   // ── Model Control: browser cannot override ─────────────────────────────────
   describe('Model Control', () => {
-    it('ignores client-supplied model and always uses gemini-3.7-flash', async () => {
+    it('ignores client-supplied model and always uses gemini-3.8-flash', async () => {
       const res = await request(app)
         .post('/api/v1/vision/ocr')
         .send({
@@ -96,8 +96,8 @@ describe('OCR Proxy Endpoint', () => {
       expect(res.status).toBe(200);
       // The call to Gemini must have used the server-controlled model
       const callArgs = mockGenerateContent.mock.calls[0][0];
-      expect(callArgs.model).toBe('gemini-3.7-flash');
-      expect(res.body.metadata.model).toBe('gemini-3.7-flash');
+      expect(callArgs.model).toBe('gemini-3.8-flash');
+      expect(res.body.metadata.model).toBe('gemini-3.8-flash');
     });
 
     it('ignores client-supplied generationConfig overrides', async () => {

@@ -1,4 +1,4 @@
-﻿import {
+import {
   ProductInput,
   AnalysisResult,
   DataSourceType,
@@ -32,9 +32,10 @@ export interface ScanHistoryFilter {
 
 export interface CachedProduct {
   barcode: string;
-  productInput: ProductInput;
+  productInput: ProductInput | null;
   cachedAt: number; // timestamp in ms
   ttlMs: number;
+  expiresAt: number;
 }
 
 export interface OpenFoodFactsConfig {

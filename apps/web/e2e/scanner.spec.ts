@@ -142,7 +142,7 @@ test('11. Full WEB -> API -> VISION E2E Flow', async ({ page }) => {
         rawText: "Ingredients: Sugar, Water. \nNutrition Facts: Energy 100kcal.",
         provider: "gemini_cloud_vision",
         confidenceAvailable: false,
-        metadata: { model: "gemini-3.7-flash", proxyResponse: true }
+        metadata: { model: "gemini-3.8-flash", proxyResponse: true }
       }
     });
   });

@@ -1,5 +1,21 @@
+diff --git a/android/CMakeLists.txt b/android/CMakeLists.txt
+index d10aa6bbb60233f7217bc00cf75c307867512cbb..da3a26c447b7ff9e828de69bb0bc8a6f878ffc8a 100644
+--- a/android/CMakeLists.txt
++++ b/android/CMakeLists.txt	
+@@ -50,9 +50,9 @@ set(BUILD_DIR "${CMAKE_SOURCE_DIR}/build")
+ set(ANDROID_CPP_DIR "${CMAKE_SOURCE_DIR}/src/main/cpp")
+ set(COMMON_CPP_DIR "${CMAKE_SOURCE_DIR}/../Common/cpp")
+ 
+-file(GLOB_RECURSE WORKLETS_COMMON_CPP_SOURCES CONFIGURE_DEPENDS
++file(GLOB_RECURSE WORKLETS_COMMON_CPP_SOURCES 
+      "${COMMON_CPP_DIR}/worklets/*.cpp")
+-file(GLOB_RECURSE WORKLETS_ANDROID_CPP_SOURCES CONFIGURE_DEPENDS
++file(GLOB_RECURSE WORKLETS_ANDROID_CPP_SOURCES 
+      "${ANDROID_CPP_DIR}/worklets/*.cpp")
+ 
+ add_library(worklets SHARED ${WORKLETS_COMMON_CPP_SOURCES}
 diff --git a/android/fix-prefab.gradle.kts b/android/fix-prefab.gradle.kts
-index 6f0a23a1f8f48f3aa2b629ac0013e2bd4a6afacb..291a194b49e3ed009e771d24d64d8097001bc604 100644
+index 6f0a23a1f8f48f3aa2b629ac0013e2bd4a6afacb..7558998248306ea1589d2a22399c6362e0779e2e 100644
 --- a/android/fix-prefab.gradle.kts
 +++ b/android/fix-prefab.gradle.kts	
 @@ -48,7 +48,7 @@ afterEvaluate {

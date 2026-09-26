@@ -16,7 +16,8 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "start": "pnpm --filter @foodgrade/api start"
   },
   "devDependencies": {
     "@types/node": "^22.13.5",

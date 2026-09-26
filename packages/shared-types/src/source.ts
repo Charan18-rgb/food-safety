@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const DataSourceTypeSchema = z.enum([
   'open_food_facts',
+  'usda_fdc',
+  'upcitemdb',
   'label_ocr',
   'user_manual',
   'verified_database',

@@ -13,7 +13,7 @@ import {
   VisionCancelledError
 } from '../errors.js';
 
-export const DEFAULT_GEMINI_VISION_MODEL = 'gemini-3.7-flash';
+export const DEFAULT_GEMINI_VISION_MODEL = 'gemini-3.8-flash';
 
 export const GEMINI_OCR_SYSTEM_PROMPT = `You are a high-precision OCR transcription engine for food package labels.
 Examine the provided image of a packaged food label and extract ALL visible text with maximum fidelity.

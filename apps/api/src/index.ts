@@ -4,14 +4,15 @@ import dotenv from 'dotenv';
 import { rateLimit } from 'express-rate-limit';
 import { randomUUID } from 'crypto';
 import { GoogleGenAI } from '@google/genai';
+import { barcodeRouter } from './routes/barcode.js';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = Number(process.env.PORT || 3001);
 
-// Hardcoded server-controlled Gemini model — browser cannot override
-const GEMINI_MODEL = 'gemini-3.7-flash';
+// Hardcoded server-controlled Gemini model (allow env override, default to current stable)
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
 
 // Allowed MIME types — only formats the pipeline actually supports
 const ALLOWED_MIME_TYPES = new Set([
@@ -22,10 +23,17 @@ const ALLOWED_MIME_TYPES = new Set([
   'image/gif',
 ]);
 
-// CORS — locked to configured frontend origin
-const frontendOrigin = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
+// CORS — locked to configured frontend origin, allowing no-origin for mobile clients
+const frontendOrigin = process.env.FRONTEND_ORIGIN;
 app.use(cors({
-  origin: frontendOrigin,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps) or matching the configured frontend origin
+    if (!origin || origin === frontendOrigin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['POST', 'GET', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'X-Request-ID'],
   exposedHeaders: ['X-Request-ID'],
@@ -58,11 +66,18 @@ if (process.env.TRUST_PROXY === '1') {
 }
 
 app.use('/api/v1/vision/ocr', limiter);
+app.use('/api/v1/barcode', limiter, barcodeRouter);
+
+// ─── Root ─────────────────────────────────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.json({ name: 'FoodGrade API', version: '1.0.0', status: 'ok', health: '/api/health' });
+});
 
 // ─── Health ───────────────────────────────────────────────────────────────────
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
+
 
 // ─── OCR Proxy ────────────────────────────────────────────────────────────────
 app.post('/api/v1/vision/ocr', async (req, res) => {
@@ -138,7 +153,7 @@ app.post('/api/v1/vision/ocr', async (req, res) => {
       ],
       config: {
         maxOutputTokens: 4096,
-        // temperature, top_p, top_k intentionally omitted for gemini-3.7-flash
+        // temperature, top_p, top_k intentionally omitted for gemini-3.8-flash
         abortSignal: controller.signal,   // Cancels local fetch on timeout/abort
       }
     });
@@ -202,7 +217,7 @@ app.use((err: any, req: express.Request, res: express.Response, _next: express.N
 export default app;
 
 if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
-  app.listen(port, () => {
+  app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening on port ${port}`);
   });
 }

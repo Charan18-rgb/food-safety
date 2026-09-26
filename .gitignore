@@ -25,3 +25,42 @@ Thumbs.db
 apps/api/.env
 playwright-report/
 test-results/
+
+# Data pipeline - raw source downloads and generated exports
+data/raw/
+data/staging/
+data/final/
+
+# Deployment artifacts
+deploy*.tar.gz
+deploy-temp/
+deploy_api.js
+
+# Scratch/temp test files
+check_off_api*.js
+fix.js
+make_barcode.js
+test_barcode.js
+test_lookups.js
+verify.ps1
+img_b64.txt
+test_ocr*.json
+ocr_test_final.json
+trace_before.json
+
+# Build tools (large binaries)
+jdk*.zip
+ninja*.zip
+ninja-new/
+*.groovy
+build.gradle
+.gradle/
+
+# Antideploy runtime files (not version controlled)
+antideploy_agent.md
+antideploy_poll.ps1
+.antideployignore
+
+# SQLite runtime files (WAL mode artifacts)
+*.db-shm
+*.db-wal

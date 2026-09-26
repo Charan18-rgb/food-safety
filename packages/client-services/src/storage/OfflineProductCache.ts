@@ -54,18 +54,23 @@ export class OfflineProductCache {
     const now = Date.now();
     const ageMs = now - cached.cachedAt;
 
+    // Use explicit expiresAt if available, otherwise compute from ttlMs/freshTTLMs
+    const expiry = cached.expiresAt || (cached.cachedAt + (cached.ttlMs || this.freshTTLMs));
+    const isFresh = now <= expiry;
+
     // 1. Fresh: within fresh TTL
-    if (ageMs <= (cached.ttlMs || this.freshTTLMs)) {
+    if (isFresh) {
       return {
         status: 'fresh',
-        data: cached.productInput,
+        data: cached.productInput, // May be null for negative caching
         cachedAt: cached.cachedAt,
         ageMs
       };
     }
 
     // 2. Stale: beyond fresh TTL but within maximum stale retention
-    if (ageMs <= this.maxStaleMs) {
+    // Note: Negative cache (data: null) is never considered "stale fallback", only missing.
+    if (ageMs <= this.maxStaleMs && cached.productInput !== null) {
       return {
         status: 'stale',
         data: cached.productInput,
@@ -81,10 +86,20 @@ export class OfflineProductCache {
 
   /**
    * Returns data only if it is strictly fresh.
+   * Can return null if missing OR if there is a fresh negative cache.
+   * To distinguish, check the negative cache explicitly if needed.
    */
   async get(barcode: string): Promise<ProductInput | null> {
     const res = await this.getWithStatus(barcode);
     return res.status === 'fresh' ? res.data : null;
+  }
+
+  /**
+   * Check if there is a negative cache (recently failed lookup).
+   */
+  async isNegativeCache(barcode: string): Promise<boolean> {
+    const res = await this.getWithStatus(barcode);
+    return res.status === 'fresh' && res.data === null;
   }
 
   /**
@@ -101,12 +116,15 @@ export class OfflineProductCache {
     return null;
   }
 
-  async set(barcode: string, productInput: ProductInput, ttlMs?: number): Promise<void> {
+  async set(barcode: string, productInput: ProductInput | null, ttlMs?: number): Promise<void> {
+    const now = Date.now();
+    const effectiveTtl = ttlMs || this.freshTTLMs;
     const cached: CachedProduct = {
       barcode,
       productInput,
-      cachedAt: Date.now(),
-      ttlMs: ttlMs || this.freshTTLMs
+      cachedAt: now,
+      ttlMs: effectiveTtl,
+      expiresAt: now + effectiveTtl
     };
     await this.adapter.set(barcode, cached);
   }

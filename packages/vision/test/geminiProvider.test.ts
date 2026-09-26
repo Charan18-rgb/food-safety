@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
   GeminiVisionProvider,
   DEFAULT_GEMINI_VISION_MODEL,
@@ -6,16 +6,16 @@ import {
 } from '../src/providers/GeminiVisionProvider.js';
 import { VisionEndpointMissingError, VisionNetworkError, VisionCancelledError } from '../src/errors.js';
 
-describe('GeminiVisionProvider Production Security & Model Upgrade (gemini-3.7-flash)', () => {
+describe('GeminiVisionProvider Production Security & Model Upgrade (gemini-3.8-flash)', () => {
   beforeEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it('should default to gemini-3.7-flash defined as a single source of truth', () => {
-    expect(DEFAULT_GEMINI_VISION_MODEL).toBe('gemini-3.7-flash');
+  it('should default to gemini-3.8-flash defined as a single source of truth', () => {
+    expect(DEFAULT_GEMINI_VISION_MODEL).toBe('gemini-3.8-flash');
 
     const provider = new GeminiVisionProvider();
-    expect(provider.getModel()).toBe('gemini-3.7-flash');
+    expect(provider.getModel()).toBe('gemini-3.8-flash');
   });
 
   it('should throw VisionEndpointMissingError when no proxy endpoint is provided', async () => {
@@ -61,7 +61,7 @@ INGREDIENTS: Oats, Sugar, Cocoa Butter, Emulsifier (INS 322).
     expect(result.confidence).not.toBe(0.95);
   });
 
-  it('should post payload to secure backend proxy with gemini-3.7-flash and clean generation config', async () => {
+  it('should post payload to secure backend proxy with gemini-3.8-flash and clean generation config', async () => {
     const mockProxyResponse = {
       rawText: 'NUTRITION FACTS Per 100g:\nEnergy: 500 kcal\nCarbohydrate: 65 g\nTotal Sugars: 20 g\nFat: 20 g\nProtein: 8 g\nSodium: 300 mg\n\nIngredients: Oats, Sugar, Cocoa Butter, Emulsifier (INS 322).',
       confidence: 0.92
@@ -90,13 +90,13 @@ INGREDIENTS: Oats, Sugar, Cocoa Butter, Emulsifier (INS 322).
           'Content-Type': 'application/json',
           'Authorization': 'Bearer test-session-token'
         }),
-        body: expect.stringMatching(/"model":\s*"gemini-3.7-flash"/)
+        body: expect.stringMatching(/"model":\s*"gemini-3.8-flash"/)
       })
     );
 
     // Verify clean generation config without deprecated legacy sampling parameters
     const sentBody = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(sentBody.model).toBe('gemini-3.7-flash');
+    expect(sentBody.model).toBe('gemini-3.8-flash');
     expect(sentBody.generationConfig.maxOutputTokens).toBe(4096);
     expect(sentBody.generationConfig.temperature).toBeUndefined();
     expect(sentBody.generationConfig.topP).toBeUndefined();
@@ -106,7 +106,7 @@ INGREDIENTS: Oats, Sugar, Cocoa Butter, Emulsifier (INS 322).
     expect(result.provider).toBe('gemini_cloud_vision');
     expect(result.lines).toHaveLength(8);
     expect(result.confidence).toBe(0.92);
-    expect(result.metadata?.model).toBe('gemini-3.7-flash');
+    expect(result.metadata?.model).toBe('gemini-3.8-flash');
   });
 
   it('should support AbortSignal cancellation and throw VisionCancelledError when aborted', async () => {
